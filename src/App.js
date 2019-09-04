@@ -1,15 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-// import TodoForm from './components/TodoComponents/TodoForm.js';
-import Todo from './components/TodoComponents/Todo.js';
 import TodoList from './components/TodoComponents/TodoList.js';
-const date = date.now();
-const tasks = [        {
-  task: 'make list',
-  id: `${date}` ,
-  completed: 'false'
-    }
+import TodoForm from './components/TodoComponents/TodoForm.js';
+
+
+const todoData = [
+  {
+    task: 'Organize Garage',
+    id: 1528817077286,
+    completed: false
+  },
+  {
+    task: 'Bake Cookies',
+    id: 1528817084358,
+    completed: false
+  }
 ];
 
 class App extends React.Component {
@@ -17,62 +23,51 @@ class App extends React.Component {
   //remember "c" "c" "r"
   constructor(props) {
     super(props);
-    //state hook => const [str, setStr]=useState('hello');
-    //state hook => const [arr, setArr]=useState([1,2,3,4,5]);
-    //state hook => const [num, setNum]=useState();
     this.state = {
-      tasks
-      // userInput: '',
-      // list: [
-      // //   {
-      // // task: 'make list',
-      // // id: Date.now() ,
-      // // completed: 'false'
-      // //   }
-      // ]
+      todos: todoData,
     };
   }
 
-  // addTodoHandleChange = event => {
-  //   this.setState({task: event.target.value, id: Date.now(), completed: 'false'});
-  // };
+  filterCompleted = () => {
+    this.setState({
+      todos: this.state.todos.filter(todo =>{
+        return !todo.completed;
+      })
+    });
+  }
 
-
-
-  
-
-toggleItem = id =>{
-  // console.log(id);
-//update state for tasks
-//use this.setState 
-//loop through arra
-//find which element
-this.setState({
-  tasks:this.state.tasks.map(item =>{
-    if (item.id === id) {
-      return {
-        ...item,
-        completed: !item.completed
+  toggleCompleted = (id) => {
+    this.setState({
+      todos:  this.state.todos.map(todo => {
+      if(id === todo.id){
+      return {...todo, completed: !todo.completed};
+      } else {
+        return todo;
       }
-    } else {
-      return item;
-    }
-  })
-})
+    })
+  });
+  }
+addTodo = task => {
+  this.setState({
+    todos: [...this.state.todos, {
+      task: task,
+    id: Date.now(),
+    completed: false
+  }]
+  });
 };
-
-  // design `App` to be the parent component of your application.
-  // this component is going to take care of state, and any change handlers you need to work with your state
   render() {
+    console.log(this.state);
     return (
       <div>
         <h2>Welcome To The Todo App!</h2>
-        {/* <TodoForm /> */}
-          <h3>this is the list here below</h3>
-
-        <TodoList />
-        {/* // tasks={this.state.tasks}
-        // toggleItem={this.toggleItem} /> */}
+        <TodoList 
+        todos={this.state.todos}
+        toggleCompleted={this.toggleCompleted}
+        />
+        <TodoForm  
+        addTodo={this.addTodo} 
+        filterTodos={this.filterCompleted}/>
       </div>
     );
   }
